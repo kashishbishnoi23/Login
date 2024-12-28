@@ -292,6 +292,7 @@
                     <h2>Join Our Zoo</h2>
                     <p>Create an account for special access</p>
                 </div>
+                <div id="AccountExists" style="color:rgb(234, 85, 85); padding:4px; display:none">Account already exists. Please login</div>
                 <form id="signup" onsubmit="handleSignUpSubmit(event)">
                     <div class="form-group">
                         <i class="fas fa-user"></i>
@@ -360,59 +361,73 @@
 
         nameInput.addEventListener('change', (event) => {
             name = event.target.value;
+            document.getElementById("AccountExists").style.display = "none";
+            console.log(name);
         })
 
         emailInput.addEventListener('change', (event) => {
             email = event.target.value;
+            document.getElementById("AccountExists").style.display = "none";
+            console.log(email);
         })
 
         passwordInput.addEventListener('change', (event) => {
             password = event.target.value;
+            document.getElementById("AccountExists").style.display = "none";
+            console.log(password);
         })
-
-
 
 
 
         const handleSignUpSubmit = async (e) => {
             e.preventDefault();
+
             console.log("handle submit");
             try {
+                // send the user data to the server at the route signupURL using post request
                 const response = await fetch(signupURL,{
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json' // application refers to a type of data which is structured -> ex. json, xml
                     },
-                    body: JSON.stringify({
+                    body: JSON.stringify({ // body refers to the data we are sending
                         name: name,
                         email: email,
                         password: password
                     })
                 })
 
-                console.log("response = ", response);
-
                 //  if the response is 'ok' -> means the data has been succesfully sent to the server -> now redirect the user to dashboard:
                 if (response.status == 200) {
-                    console.log(response);
-                    redirectToDashBoard();
+                    redirectToDashBoard(email);
+                } else {
+                    // account already exists:
+                    document.getElementById("AccountExists").style.display = "block";
+
                 }
-                console.log(response);
             }
             catch (error) {
                 console.log(error);
             }
         }
 
+        const redirectToDashBoard = async(inputemail) => {
+            
+         //  pass user email to the server and retrive user details  using get request:
+        const dashboardURL = `http://localhost:8080/dashboard?email=${inputemail}`
+        const response = await fetch(dashboardURL);
+        const data = await response.json();
 
-        const redirectToDashBoard = () => {
-            console.log("helloooo");
-            window.location.href = `./dashboard.html?email=${email}`
+        //  store the user info in local storage:
+        localStorage.setItem('name', JSON.stringify(data.name));
+        localStorage.setItem('email', JSON.stringify(data.email));
+        localStorage.setItem('password', JSON.stringify(data.password));
+
+        //  redirect to dashboard -> window.object ek global object hota hai -> href is a key of this object in which we pass the url to which we want to redirect
+           window.location.href = './dashboard.html'
         }
 
-
-    
-
+        
         //  login:
         let loginURL = "http://localhost:8080/login";
         let LoginemailInput = '';
@@ -428,7 +443,7 @@
 
         const handleLoginSubmit = async (event)=>{
             event.preventDefault();
-            // console.log("login");
+            //  send email and password to server using post request:
             try{
             const response = await fetch(loginURL, {
                 method: 'POST',
@@ -441,11 +456,11 @@
                 })
             })
 
-            console.log("status = " ,response.status);
+            // console.log("status = " ,response.status);
 
-            if (response.status == 200){
-                window.location.href = `./dashboard.html?email=${LoginemailInput}`
-            } else{
+            if (response.status == 200){ // user data exists in the server
+                redirectToDashBoard(LoginemailInput);
+            } else{ // user data does not exist in the server
                 console.log("login not success");
                 document.querySelector("#invalidCredendials").style.display = "block"
             }
@@ -455,9 +470,9 @@
         }
 
 
+
+
     </script>
 </body>
 
 </html>
-
-

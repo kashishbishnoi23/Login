@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -76,27 +77,8 @@
             border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        .profile-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #f0f0f0;
-        }
 
-        .profile-pic {
-            width: 90px;
-            height: 90px;
-            background: #f8f9fa;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 20px;
-            color: #2c3e50;
-            font-size: 2em;
-            border: 2px solid #e9ecef;
-        }
+    
 
         .profile-info h2 {
             color: #2c3e50;
@@ -139,7 +121,8 @@
 
         .info-card h3 i {
             margin-right: 10px;
-            color: #3498db;
+            /* color: #3498db; */
+            color:#389e70;
         }
 
         .info-card p {
@@ -148,10 +131,14 @@
             margin-bottom: 15px;
         }
 
-        .edit-btn {
+        .edit-btn,
+        .save-btn,
+        .cancel-btn {
             background: white;
             border: 1px solid #e9ecef;
-            color: #3498db;
+            /* color: #3498db; */
+            /* color:#2d6a4f; */
+            color:#389e70;
             padding: 8px 16px;
             border-radius: 6px;
             cursor: pointer;
@@ -163,9 +150,11 @@
             gap: 6px;
         }
 
+
+
         .edit-btn:hover {
             background: #f8f9fa;
-            border-color: #3498db;
+            border-color:#389e70;
         }
 
         .activity-section {
@@ -204,7 +193,7 @@
             align-items: center;
             justify-content: center;
             margin-right: 15px;
-            color: #3498db;
+            color: #389e70;
             border: 1px solid #e9ecef;
         }
 
@@ -217,6 +206,15 @@
         .activity-info p {
             color: #7f8c8d;
             font-size: 0.9em;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            padding-top: 10px;
+            width: 100%;
+
         }
 
         @media (max-width: 768px) {
@@ -247,9 +245,12 @@
             .info-card {
                 padding: 20px;
             }
+
+
         }
     </style>
 </head>
+
 <body>
     <div class="dashboard">
         <header class="header">
@@ -263,39 +264,61 @@
         </header>
 
         <section class="profile-section">
-            <!-- <div class="profile-header">
-                <div class="profile-pic">
-                    <i class="fas fa-user"></i>
-                </div>
-                <div class="profile-info">
-                    <h2 id="userName">Loading...</h2>
-                    <p>Zoo Adventure Member</p>
-                </div>
-            </div> -->
-
             <div class="info-grid">
                 <div class="info-card">
                     <h3><i class="fas fa-user"></i> Full Name</h3>
-                    <p id="fullName">Loading...</p>
-                    <button class="edit-btn" onclick="editField('name')">
-                        <i class="fas fa-edit"></i> Edit
-                    </button>
+                    <input style="border:none; outline:none" disabled id="fullName" value="Loading..."></input>
+                    <div class="buttons">
+                        <button class="edit-btn" onclick="editField('fullName')">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+
+                        <button class="save-btn" id="saveBtn" onclick="saveName()">
+                            <i class="fas fa-save"></i> Save
+                        </button>
+                        <button class="cancel-btn" id="cancelBtn" onclick="cancelNameEditing()">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                    </div>
                 </div>
 
                 <div class="info-card">
                     <h3><i class="fas fa-envelope"></i> Email Address</h3>
-                    <p id="userEmail">Loading...</p>
-                    <button class="edit-btn" onclick="editField('email')">
-                        <i class="fas fa-edit"></i> Edit
-                    </button>
+                    <!-- <p id="userEmail">Loading...</p> -->
+                    <input style="border:none; outline:none; width:100%; font-size:15px;" disabled id="userEmail"
+                        value="Loading..."></input>
+                    <div class="buttons">
+                        <button class="edit-btn" onclick="editField('userEmail')">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+
+                        <button class="save-btn" id="saveBtn" onclick="saveEmail()">
+                            <i class="fas fa-save"></i> Save
+                        </button>
+                        <button class="cancel-btn" id="cancelBtn" onclick="cancelEmailEditing()">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                    </div>
+
                 </div>
 
                 <div class="info-card">
                     <h3><i class="fas fa-lock"></i> Password</h3>
-                    <p id="userPassword"></p>
-                    <button class="edit-btn" onclick="editField('password')">
-                        <i class="fas fa-edit"></i> Change Password
-                    </button>
+                    <!-- <p id="userPassword"></p> -->
+                    <input style="border:none; outline:none" disabled id="userPassword" value="Loading..."></input>
+
+                    <div class="buttons">
+                        <button class="edit-btn" onclick="editField('userPassword')">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+
+                        <button class="save-btn" id="saveBtn" onclick="savePassword()">
+                            <i class="fas fa-save"></i> Save
+                        </button>
+                        <button class="cancel-btn" id="cancelBtn" onclick="cancelPasswordEditing()">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -335,115 +358,110 @@
     </div>
 
     <script>
-        // Function to get user data from server
-        // async function getUserData() {
-        //     try {
-        //         const response = await fetch('http://localhost:8080/user-data', {
-        //             method: 'GET',
-        //             headers: {
-        //                 'Authorization': `Bearer ${localStorage.getItem('token')}`
-        //             }
-        //         });
-                
-        //         if (response.ok) {
-        //             const userData = await response.json();
-        //             updateUserInterface(userData);
-        //         } else {
-        //             console.error('Failed to fetch user data');
-        //         }
-        //     } catch (error) {
-        //         console.error('Error:', error);
-        //     }
-        // }
-
-        // // Function to update UI with user data
-        // function updateUserInterface(userData) {
-        //     document.getElementById('userName').textContent = userData.name;
-        //     document.getElementById('fullName').textContent = userData.name;
-        //     document.getElementById('userEmail').textContent = userData.email;
-        //     // Password is kept hidden for security
-        // }
-
-        // // Function to handle field editing
-        // function editField(field) {
-        //     const newValue = prompt(`Enter new ${field}:`);
-        //     if (newValue) {
-        //         updateField(field, newValue);
-        //     }
-        // }
-
-        // Function to update field in backend
-        // async function updateField(field, value) {
-        //     try {
-        //         const response = await fetch(`http://localhost:8080/update-${field}`, {
-        //             method: 'POST',
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //                 'Authorization': `Bearer ${localStorage.getItem('token')}`
-        //             },
-        //             body: JSON.stringify({ [field]: value })
-        //         });
-
-        //         if (response.ok) {
-        //             getUserData(); // Refresh user data
-        //             alert(`${field} updated successfully!`);
-        //         } else {
-        //             alert('Failed to update field');
-        //         }
-        //     } catch (error) {
-        //         console.error('Error:', error);
-        //         alert('Error updating field');
-        //     }
-        // }
+      
 
         // // Function to handle logout
-        // function handleLogout() {
-        //     localStorage.removeItem('token');
-        //     window.location.href = '/index.html';
-        // }
+        function handleLogout() {
+            window.location.href = 'index.html';
+            localStorage.clear();
 
-        // Load user data when page loads
-        // document.addEventListener('DOMContentLoaded', getUserData);
+        }
 
+        //  enable the input field for editing:
+        function editField(id) {
+            document.getElementById(id).disabled = false;
+        }
 
-        // retrieve the user information from server:
+        let name;
+        let email;
+        let password;
+        function updateDashBoard() {
+            //  fetch data from local storage and update the dashboard UI:
+            name = JSON.parse(localStorage.getItem('name'));
+            email = JSON.parse(localStorage.getItem('email'));
+            password = JSON.parse(localStorage.getItem('password'));
 
-        const dashboardUrl = "http://localhost:8080/dashboard";
-        const urlParams = new URLSearchParams(window.location.search);
+            document.querySelector("#fullName").value = name;
+            document.querySelector("#userEmail").value = email;
+            document.querySelector("#userPassword").value = password;
+        }
 
-        const useremail = urlParams.get('email');
+        updateDashBoard();
 
+        const editURL = `http://localhost:8080/edit?email=${email}`
 
-
-        const fetchUserInfo = async()=>{
-
-            const response = await fetch(dashboardUrl);
-            // console.l
-            const data = await response.json();
-            console.log(data);
-
-            const userinfo = {};
-            data.forEach((item)=>{
-                if (item.email == useremail){
-                    userinfo.name = item.name;
-                    userinfo.email = item.email;
-                    userinfo.password = item.password;
-                }
-            })
-
-           console.log("useremail = ", useremail);
-           console.log("user info = " , userinfo);
-
-           document.querySelector("#fullName").innerHTML = userinfo.name;
-           document.querySelector("#userEmail").innerHTML = userinfo.email;
-           document.querySelector("#userPassword").innerHTML = userinfo.password;
- 
+        async function saveName() {
+            let updatedName = document.getElementById("fullName").value;
+            localStorage.setItem('name', JSON.stringify(updatedName));
+        //  send the updated name to server:
+            try {
+                const response = await fetch(editURL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: updatedName,
+                    })
+                })
+                updateDashBoard();
+            } catch (error) {
+                console.log("Error : ", error);
+            }
         }
 
 
+        async function savePassword() {
+            let updatedPassword = document.getElementById("userPassword").value;
+            localStorage.setItem('password', JSON.stringify(updatedPassword));
+            
+            //  send the updated password to server:
+            try {
+                const response = await fetch(editURL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        password: updatedPassword,
+                    })
+                })
+                updateDashBoard();
+            } catch (error) {
+                console.log("Error : ", error);
+            }
+        }
+
+        function cancelNameEditing(){
+            let currentName = JSON.parse(localStorage.getItem('name'));
+            document.querySelector("#fullName").value = currentName;
+            document.querySelector("#fullName").disabled = true;
+        }
+
         
-        fetchUserInfo();
+        function cancelPasswordEditing(){
+            let currentName = JSON.parse(localStorage.getItem('password'));
+            document.querySelector("#userPassword").value = currentName;
+            document.querySelector("#userPassword").disabled = true;
+        }
+
+
+
+       
+
+
+
+
+
+
+
+
+
+
+
+        // fetchUserInfo();
 
     </script>
 </body>
-</html> 
+
+</html>
