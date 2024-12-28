@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoo Adventures - Login</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+        }
+
+        /* Left Side - Image Slideshow */
+        .animation-side {
+            width: 50%;
+            background: #1a1a1a;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slideshow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide-content {
+            position: absolute;
+            bottom: 50px;
+            left: 50px;
+            color: white;
+            z-index: 2;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease-in-out;
+        }
+
+        .slide.active .slide-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide-content h2 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .slide-content p {
+            font-size: 1.2em;
+            max-width: 400px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.1) 100%);
+        }
+
+        /* Right Side - Form */
+        .form-side {
+            width: 50%;
+            background: #ffffff;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+            width: 100%;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .form-header h2 {
+            font-size: 2.5em;
+            color: #2d6a4f;
+            margin-bottom: 10px;
+        }
+
+        .form-header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #2d6a4f;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            border-color: #2d6a4f;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(45, 106, 79, 0.2);
+        }
+
+        .form-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #2d6a4f, #40916c);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .form-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(45, 106, 79, 0.2);
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .form-footer a {
+            color: #2d6a4f;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .switch-form {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .switch-btn {
+            background: none;
+            border: none;
+            color: #2d6a4f;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .switch-btn:hover {
+            text-decoration: underline;
+        }
+
+        #signup-form {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Left Side - Image Slideshow -->
+        <div class="animation-side">
+            <div class="slideshow">
+                <div class="slide active"
+                    style="background-image: url('https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+                    <div class="slide-content">
+                        <h2>Welcome to Our Zoo</h2>
+                        <p>Discover amazing animals and create unforgettable memories</p>
+                    </div>
+                </div>
+                <div class="slide"
+                    style="background-image: url('https://images.unsplash.com/photo-1554456854-55a089fd4cb2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+                    <div class="slide-content">
+                        <h2>Meet Our Pandas</h2>
+                        <p>Get up close with our adorable giant pandas</p>
+                    </div>
+                </div>
+                <div class="slide"
+                    style="background-image: url('https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+                    <div class="slide-content">
+                        <h2>Playful Penguins</h2>
+                        <p>Watch our penguin family splash and play</p>
+                    </div>
+                </div>
+                <div class="slide"
+                    style="background-image: url('https://images.unsplash.com/photo-1534759846116-5799c33ce22a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+                    <div class="slide-content">
+                        <h2>Majestic Lions</h2>
+                        <p>Experience the power and grace of big cats</p>
+                    </div>
+                </div>
+                <div class="slide"
+                    style="background-image: url('https://images.unsplash.com/photo-1557008075-7f2c5efa4cfd?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+                    <div class="slide-content">
+                        <h2>Elephant Adventures</h2>
+                        <p>Join us for amazing elephant encounters</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Form -->
+        <div class="form-side">
+            <!-- Login Form -->
+            <div class="form-container" id="login-form">
+                <div class="form-header">
+                    <h2>Welcome Back!</h2>
+                    <p>Login to plan your zoo adventure</p>
+                </div>
+                <form id="login" onsubmit="handleLoginSubmit(event)">
+                    <div id="invalidCredendials" style="color:rgb(231, 111, 111);padding:5px; display:none">Invalid user or password , please try again</div>
+                    <div class="form-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="LoginemailInput" class="form-input" placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="LoginpasswordInput" class="form-input" placeholder="Password"
+                            required>
+                    </div>
+                    <button type="submit" id="loginbtn" class="form-button">Login</button>
+                    <div class="form-footer">
+                        <a href="#">Forgot Password?</a>
+                    </div>
+                    <div class="switch-form">
+                        <p>New to our zoo? <button type="button" class="switch-btn" onclick="toggleForm()">Sign
+                                Up</button></p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Signup Form -->
+            <div class="form-container" id="signup-form">
+                <div class="form-header">
+                    <h2>Join Our Zoo</h2>
+                    <p>Create an account for special access</p>
+                </div>
+                <div id="AccountExists" style="color:rgb(234, 85, 85); padding:4px; display:none">Account already exists. Please login</div>
+                <form id="signup" onsubmit="handleSignUpSubmit(event)">
+                    <div class="form-group">
+                        <i class="fas fa-user"></i>
+                        <input id="nameInput" type="text" class="form-input" placeholder="Full Name" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-envelope"></i>
+                        <input id="emailInput" type="email" class="form-input" placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-lock"></i>
+                        <input id="passwordInput" type="password" class="form-input" placeholder="Password" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" class="form-input" placeholder="Confirm Password" required>
+                    </div>
+                    <button  type="submit" class="form-button">Sign Up</button>
+                    <div class="switch-form">
+                        <p>Already have an account? <button type="button" class="switch-btn"
+                                onclick="toggleForm()">Login</button></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Form toggle function
+        function toggleForm() {
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+
+            if (loginForm.style.display === 'none') {
+                loginForm.style.display = 'block';
+                signupForm.style.display = 'none';
+            } else {
+                loginForm.style.display = 'none';
+                signupForm.style.display = 'block';
+            }
+        }
+
+        // Slideshow functionality
+        const slides = document.querySelectorAll('.slide');
+        let currentSlide = 0;
+
+        function nextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+
+        // Change slide every 5 seconds
+        setInterval(nextSlide, 5000);
+        let name = '';
+        let email = '';
+        let password = '';
+
+
+        // signup URL:
+        const signupURL = "http://localhost:8080/signup";
+        let signupform = document.querySelector("#signup-form");
+        let nameInput = signupform.querySelector("#nameInput");
+        let emailInput = signupform.querySelector("#emailInput");
+        let passwordInput = signupform.querySelector("#passwordInput");
+
+        nameInput.addEventListener('change', (event) => {
+            name = event.target.value;
+            document.getElementById("AccountExists").style.display = "none";
+            console.log(name);
+        })
+
+        emailInput.addEventListener('change', (event) => {
+            email = event.target.value;
+            document.getElementById("AccountExists").style.display = "none";
+            console.log(email);
+        })
+
+        passwordInput.addEventListener('change', (event) => {
+            password = event.target.value;
+            document.getElementById("AccountExists").style.display = "none";
+            console.log(password);
+        })
+
+
+
+        const handleSignUpSubmit = async (e) => {
+            e.preventDefault();
+
+            console.log("handle submit");
+            try {
+                // send the user data to the server at the route signupURL using post request
+                const response = await fetch(signupURL,{
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json' // application refers to a type of data which is structured -> ex. json, xml
+                    },
+                    body: JSON.stringify({ // body refers to the data we are sending
+                        name: name,
+                        email: email,
+                        password: password
+                    })
+                })
+
+                //  if the response is 'ok' -> means the data has been succesfully sent to the server -> now redirect the user to dashboard:
+                if (response.status == 200) {
+                    redirectToDashBoard(email);
+                } else {
+                    // account already exists:
+                    document.getElementById("AccountExists").style.display = "block";
+
+                }
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+
+        const redirectToDashBoard = async(inputemail) => {
+            
+         //  pass user email to the server and retrive user details  using get request:
+        const dashboardURL = `http://localhost:8080/dashboard?email=${inputemail}`
+        const response = await fetch(dashboardURL);
+        const data = await response.json();
+
+        //  store the user info in local storage:
+        localStorage.setItem('name', JSON.stringify(data.name));
+        localStorage.setItem('email', JSON.stringify(data.email));
+        localStorage.setItem('password', JSON.stringify(data.password));
+
+        //  redirect to dashboard -> window.object ek global object hota hai -> href is a key of this object in which we pass the url to which we want to redirect
+           window.location.href = './dashboard.html'
+        }
+
+        
+        //  login:
+        let loginURL = "http://localhost:8080/login";
+        let LoginemailInput = '';
+        let LoginpasswordInput = '';
+        let loginform = document.querySelector('#login-form');
+        loginform.querySelector("#LoginemailInput").addEventListener('change', (event)=>{
+            LoginemailInput = event.target.value;
+        })
+
+        loginform.querySelector("#LoginpasswordInput").addEventListener('change', (event)=>{
+            LoginpasswordInput = event.target.value;
+        })
+
+        const handleLoginSubmit = async (event)=>{
+            event.preventDefault();
+            //  send email and password to server using post request:
+            try{
+            const response = await fetch(loginURL, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email:LoginemailInput,
+                    password:LoginpasswordInput
+                })
+            })
+
+            // console.log("status = " ,response.status);
+
+            if (response.status == 200){ // user data exists in the server
+                redirectToDashBoard(LoginemailInput);
+            } else{ // user data does not exist in the server
+                console.log("login not success");
+                document.querySelector("#invalidCredendials").style.display = "block"
+            }
+        } catch(error){
+            console.log("Error : ", error);
+        }
+        }
+
+
+
+
+    </script>
+</body>
+
+</html>
+
+
